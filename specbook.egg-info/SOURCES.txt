@@ -1,0 +1,9 @@
+setup.py
+specbook/__init__.py
+specbook/cli.py
+specbook.egg-info/PKG-INFO
+specbook.egg-info/SOURCES.txt
+specbook.egg-info/dependency_links.txt
+specbook.egg-info/entry_points.txt
+specbook.egg-info/requires.txt
+specbook.egg-info/top_level.txt
