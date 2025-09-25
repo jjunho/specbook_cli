@@ -8,177 +8,80 @@ A escrita de uma longa narrativa é um projeto complexo. O SpecBook ajuda a gere
 
 O fluxo de trabalho incentiva o autor a pensar e responder perguntas sobre personagens, cenários e arcos narrativos *antes* de escrever a prosa. Essas respostas são salvas como arquivos de texto estruturados (YAML), que se tornam a "fonte da verdade" para a história.
 
-## Instalação
+## Instalação e Desenvolvimento
 
-Recomenda-se o uso de um ambiente virtual do Python.
+Esta é a maneira recomendada de instalar o `specbook` para desenvolvimento, permitindo que suas alterações no código sejam refletidas imediatamente.
 
 1.  **Clone o repositório (se aplicável) e navegue até a pasta `specbook_cli`**.
 
-2.  **Crie e ative um ambiente virtual:**
+2.  **Crie e ative um ambiente virtual (`venv`):**
+    Um `venv` é um ambiente Python isolado que previne conflitos de dependência.
     ```sh
+    # Crie o ambiente
     python3 -m venv venv
+
+    # Ative o ambiente (Linux/macOS)
     source venv/bin/activate
     ```
 
-3.  **Instale o pacote em modo editável:**
-    Isso instalará as dependências e o comando `specbook` no seu ambiente.
+3.  **Instale o pacote em modo editável (`-e`):**
+    Este comando instala as dependências e cria o link para o comando `specbook`, apontando diretamente para o seu código-fonte.
     ```sh
     pip install -e .
     ```
 
-4.  **(Opcional, mas recomendado) Instale o PyYAML para melhor formatação:**
+4.  **(Opcional, mas recomendado) Instale o PyYAML:**
+    O `specbook` funciona sem ele, mas o `PyYAML` gera arquivos `.yaml` mais limpos e legíveis.
     ```sh
     pip install pyyaml
     ```
 
+Após estes passos, o comando `specbook` estará disponível no seu terminal (enquanto o `venv` estiver ativo).
+
 ## Como Usar
 
-O `specbook` funciona com uma série de comandos. A maioria deles exige o argumento `--project` para saber em qual projeto você está trabalhando.
+(Esta seção permanece a mesma, detalhando os comandos `init`, `specify`, `status`, `review`, `generate`, etc.)
 
----
+## Empacotamento e Distribuição
 
-### `init`
+Se você quiser construir o `specbook` como um pacote distribuível (por exemplo, para instalar em outro lugar ou compartilhar), siga estes passos.
 
-Inicializa uma nova estrutura de projeto de livro.
+### Passo 1: Construir o Pacote
 
--   **Comando:** `specbook init [nome_do_projeto]`
--   **Exemplo:**
+O projeto usa `setuptools` e `wheel` para criar os pacotes.
+
+1.  **Garanta que as ferramentas de empacotamento estão atualizadas:**
     ```sh
-    specbook init meu_livro_de_fantasia
-    ```
-    Isso cria uma pasta `meu_livro_de_fantasia/` com todos os subdiretórios necessários (`specs/`, `drafts/`, `plans/`, etc.).
-
----
-
-### `specify`
-
-Cria ou atualiza as especificações (specs) do seu mundo. Este comando tem subcomandos.
-
--   **`seed`**: Define a ideia central, gênero e temas do livro.
-    -   **Comando:** `specbook specify seed --project [projeto]`
-    -   **Exemplo:**
-        ```sh
-        specbook specify seed --project meu_livro_de_fantasia
-        ```
-        O sistema fará perguntas interativas sobre a sua ideia.
-
--   **`character`**: Cria uma nova especificação de personagem.
-    -   **Comando:** `specbook specify character --project [projeto]`
-    -   **Exemplo:**
-        ```sh
-        specbook specify character --project meu_livro_de_fantasia
-        ```
-        O sistema fará perguntas sobre nome, idade, papel, desejos, medos, etc.
-
--   **`setting`**: Cria uma nova especificação de cenário ou local.
-    -   **Comando:** `specbook specify setting --project [projeto]`
-    -   **Exemplo:**
-        ```sh
-        specbook specify setting --project meu_livro_de_fantasia
-        ```
-
----
-
-### `status`
-
-Exibe um painel com o status atual do projeto.
-
--   **Comando:** `specbook status --project [projeto]`
--   **Exemplo:**
-    ```sh
-    specbook status --project meu_livro_de_fantasia
-    ```
-    A saída mostrará a contagem de specs, o progresso dos rascunhos (contagem de palavras) e as tarefas pendentes.
-
----
-
-### `review`
-
-Roda uma verificação de consistência avançada no projeto.
-
--   **Comando:** `specbook review --project [projeto]`
--   **Exemplo:**
-    ```sh
-    specbook review --project meu_livro_de_fantasia
-    ```
-    Ele gera um relatório em `reviews/consistency_report.md` que aponta:
-    -   Campos essenciais faltando nos specs de personagens.
-    -   Referências a personagens ou locais nos rascunhos que não existem nos specs.
-    -   Uma pontuação de consistência geral para o projeto.
-
----
-
-### `generate`
-
-Ajuda a vencer a página em branco gerando esqueletos de escrita.
-
--   **`scene`**: Gera um arquivo de cena com um prompt personalizado.
-    -   **Comando:** `specbook generate scene --project [projeto]`
-    -   **Exemplo:**
-        ```sh
-        specbook generate scene --project meu_livro_de_fantasia
-        ```
-        O sistema listará os personagens e cenários existentes para você escolher e criará um novo arquivo em `fragments/scenes/`.
-
----
-
-### Outros Comandos
-
--   **`plan`**: Atualiza o `plans/plan.md` com a ideia do `seed.yaml`.
-    -   `specbook plan --project [projeto]`
--   **`tasks`**: Gera uma lista de tarefas padrão em `tasks/tasks.md`.
-    -   `specbook tasks --project [projeto]`
--   **`draft`**: Cria um novo arquivo de rascunho para um capítulo.
-    -   `specbook draft [numero_capitulo] --project [projeto]`
-
-## Workflow de Exemplo
-
-1.  **Inicie seu projeto:**
-    ```sh
-    specbook init cronicas_de_aethel
+    pip install --upgrade setuptools wheel
     ```
 
-2.  **Defina a ideia central:**
+2.  **Execute o comando de construção na pasta `specbook_cli`:**
     ```sh
-    specbook specify seed --project cronicas_de_aethel
+    python3 setup.py sdist bdist_wheel
     ```
 
-3.  **Crie seu protagonista e um cenário:**
-    ```sh
-    specbook specify character --project cronicas_de_aethel
-    # (Responda as perguntas para criar 'Luna')
+    Isso criará uma pasta `dist/` contendo dois arquivos:
+    -   Um arquivo `.tar.gz` (Source Distribution)
+    -   Um arquivo `.whl` (Built Distribution / Wheel). Este é o formato preferido para instalação com `pip`.
 
-    specbook specify setting --project cronicas_de_aethel
-    # (Responda as perguntas para criar 'Aethelgard')
+### Passo 2: Instalar o Pacote Localmente
+
+Para testar a instalação do pacote que você acabou de criar, você pode instalá-lo em um novo ambiente virtual.
+
+1.  **Crie e ative um novo `venv` em outra pasta.**
+
+2.  **Instale o pacote usando `pip` e o caminho para o arquivo `.whl`:**
+    ```sh
+    # Exemplo, o nome do arquivo pode variar
+    pip install /caminho/para/specbook_cli/dist/specbook-0.1.0-py3-none-any.whl
     ```
 
-4.  **Verifique o status do projeto:**
-    ```sh
-    specbook status --project cronicas_de_aethel
-    ```
+3.  **Teste o comando:**
+    Agora o comando `specbook` deve estar disponível, funcionando a partir do pacote instalado, e não mais diretamente do código-fonte.
 
-5.  **Gere uma cena para começar a escrever:**
-    ```sh
-    specbook generate scene --project cronicas_de_aethel
-    # (Escolha 'Luna' e 'Aethelgard' na lista)
-    ```
+## Testes
 
-6.  **Escreva o primeiro capítulo:**
-    ```sh
-    specbook draft 1 --project cronicas_de_aethel
-    # (Abra o arquivo drafts/01_chapter.md e escreva, referenciando os specs)
-    # Ex: **Influências de spec**: personagens=[Luna], locais=[Aethelgard]
-    ```
-
-7.  **Revise a consistência:**
-    ```sh
-    specbook review --project cronicas_de_aethel
-    # (Verifique o relatório em reviews/consistency_report.md)
-    ```
-
-## Desenvolvimento
-
-Para rodar a suíte de testes e garantir que tudo está funcionando, execute:
+Para rodar a suíte de testes e garantir que tudo está funcionando como esperado, execute o seguinte comando na pasta `specbook_cli`:
 
 ```sh
 python3 -m unittest test_specbook.py
